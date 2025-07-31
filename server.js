@@ -14,26 +14,32 @@ app.use(bodyParser.json());
 app.post('/chat', async (req, res) => {
   const { message, allProducts = [] } = req.body;
 
-  // If no message, return welcome
   if (!message || message.trim() === '') {
     return res.json({
       response: "👋 Hello! I'm Nextron AI Agent. I can help you explore products in our store. Ask me anything!"
     });
   }
 
-  // Build a formatted product list for the AI to use
+  // Compose product data with price and formatting
   const productListText = allProducts
     .filter(p => p.name && p.description)
-    .map(p => `${p.name}: ${p.description}`)
-    .join('\n');
+    .map(p => `🎁 ${p.name}\n💰 Price: $${p.price}\n📝 ${p.description}`)
+    .join('\n\n');
 
   const systemPrompt = `
-You are Nextron's smart and friendly AI shopping assistant.
+You are Nextron's smart and friendly AI assistant for electronics shopping.
 
-You ONLY suggest products from this product list:
+Only recommend products from the following list:
 ${productListText}
 
-When the user asks for help, your answers should reference these actual store products only. NEVER invent products. Be conversational and clear. If you're unsure, ask clarifying questions.
+If the user asks about a product, search by name or category. NEVER invent items.
+Format replies clearly using:
+
+🎁 Product Name  
+💰 Price: $...  
+📝 Description: ...
+
+Always speak conversationally. If unsure, ask a follow-up question.
 `.trim();
 
   try {
