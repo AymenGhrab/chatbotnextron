@@ -23,8 +23,8 @@ app.post('/chat', async (req, res) => {
 
 
   const productListText = allProducts
-    .filter(p => p.name && p.description)
-    .map(p => `${p.name}: ${p.description}`)
+    .filter(p => p.name && p.description && p.price)
+    .map(p => `${p.name}: ${p.description} : ${p.price}`)
     .join('\n');
 
   const systemPrompt = `
